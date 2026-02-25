@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import Button from './Button';
 import Input from './Input';
+import girlProfile from '../assets/girlprofile.jpg';
+import youngBoy from '../assets/youngboy.jpg';
+import youngWomen from '../assets/youngwomen.jpg';
 
 const LandingPage = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -122,7 +125,11 @@ const LandingPage = () => {
                 <div className="flex justify-start animate-float">
                   <div className="bg-white rounded-3xl rounded-bl-sm shadow-lg p-6 max-w-sm">
                     <div className="flex items-center gap-3 mb-3">
-                      <div className="w-10 h-10 bg-gradient-to-br from-teal-400 to-teal-600 rounded-full"></div>
+                      <img 
+                        src={youngWomen} 
+                        alt="Sarah Johnson" 
+                        className="w-10 h-10 rounded-full object-cover"
+                      />
                       <div>
                         <p className="font-semibold text-slate-800">Sarah Johnson</p>
                         <p className="text-xs text-slate-500">2 min ago</p>
@@ -136,7 +143,11 @@ const LandingPage = () => {
                 <div className="flex justify-end animate-float" style={{ animationDelay: '0.5s' }}>
                   <div className="bg-teal-700 rounded-3xl rounded-br-sm shadow-lg p-6 max-w-sm">
                     <div className="flex items-center gap-3 mb-3">
-                      <div className="w-10 h-10 bg-white rounded-full"></div>
+                      <img 
+                        src={youngBoy} 
+                        alt="Mike Chen" 
+                        className="w-10 h-10 rounded-full object-cover"
+                      />
                       <div>
                         <p className="font-semibold text-white">Mike Chen</p>
                         <p className="text-xs text-teal-200">Just now</p>
@@ -150,7 +161,11 @@ const LandingPage = () => {
                 <div className="flex justify-start animate-float" style={{ animationDelay: '1s' }}>
                   <div className="bg-white rounded-3xl rounded-bl-sm shadow-lg p-6 max-w-sm">
                     <div className="flex items-center gap-3 mb-3">
-                      <div className="w-10 h-10 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full"></div>
+                      <img 
+                        src={girlProfile} 
+                        alt="Emma Davis" 
+                        className="w-10 h-10 rounded-full object-cover"
+                      />
                       <div>
                         <p className="font-semibold text-slate-800">Emma Davis</p>
                         <p className="text-xs text-slate-500">1 min ago</p>
