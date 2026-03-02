@@ -6,6 +6,7 @@ interface InputProps {
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   label?: string;
+  disabled?: boolean;
 }
 
 const Input: React.FC<InputProps> = ({ 
@@ -13,7 +14,8 @@ const Input: React.FC<InputProps> = ({
   placeholder, 
   value, 
   onChange,
-  label
+  label,
+  disabled = false
 }) => {
   return (
     <div className="w-full mb-6">
@@ -27,7 +29,8 @@ const Input: React.FC<InputProps> = ({
         placeholder={placeholder}
         value={value}
         onChange={onChange}
-        className="w-full px-6 py-4 border-2 border-slate-200 rounded-2xl text-base transition-all duration-200 focus:outline-none focus:border-teal-500 focus:ring-4 focus:ring-teal-50 placeholder:text-slate-300 bg-white"
+        disabled={disabled}
+        className="w-full px-6 py-4 border-2 border-slate-200 rounded-2xl text-base transition-all duration-200 focus:outline-none focus:border-teal-500 focus:ring-4 focus:ring-teal-50 placeholder:text-slate-300 bg-white disabled:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-60"
       />
     </div>
   );

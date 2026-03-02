@@ -1,6 +1,9 @@
 import { useState } from 'react';
-import Button from './Button';
-import Input from './Input';
+import Button from '../sharedComponents/Button';
+import Input from '../sharedComponents/Input';
+import Dashboard from './Dashboard';
+import { useAuth } from '../hooks/useAuth';
+import { showToast } from '../lib/toast';
 import girlProfile from '../assets/girlprofile.jpg';
 import youngBoy from '../assets/youngboy.jpg';
 import youngWomen from '../assets/youngwomen.jpg';
@@ -13,15 +16,48 @@ const LandingPage = () => {
     username: ''
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const { 
+    user, 
+    isAuthenticated, 
+    login, 
+    register,
+    isLoggingIn, 
+    isRegistering,
+  } = useAuth();
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
-    // Authentication logic will go here
+    
+    try {
+      if (isLogin) {
+        await login({ email: formData.email, password: formData.password });
+        showToast.success('Login successful! Welcome back.');
+      } else {
+        await register({ 
+          username: formData.username, 
+          email: formData.email, 
+          password: formData.password 
+        });
+        showToast.success('Registration successful! Welcome to MessageHub.');
+      }
+    } catch (error) {
+      console.error('Authentication error:', error);
+      showToast.error(
+        error instanceof Error ? error.message : 'Authentication failed. Please try again.'
+      );
+    }
   };
 
   const handleInputChange = (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [field]: e.target.value });
   };
+
+  const isLoading = isLoggingIn || isRegistering;
+
+  // Show authenticated view
+  if (isAuthenticated && user) {
+    return <Dashboard />;
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center p-8">
@@ -83,6 +119,7 @@ const LandingPage = () => {
                 placeholder="Username"
                 value={formData.username}
                 onChange={handleInputChange('username')}
+                disabled={isLoading}
               />
             </div>
             
@@ -91,6 +128,7 @@ const LandingPage = () => {
               placeholder="Email"
               value={formData.email}
               onChange={handleInputChange('email')}
+              disabled={isLoading}
             />
             
             <Input
@@ -98,13 +136,20 @@ const LandingPage = () => {
               placeholder="Password"
               value={formData.password}
               onChange={handleInputChange('password')}
+              disabled={isLoading}
             />
 
             <div className="flex gap-4 mt-8">
-              <Button variant="primary" size="lg" fullWidth type="submit">
-                {isLogin ? 'Sign In' : 'Sign Up'}
+              <Button 
+                variant="primary" 
+                size="lg" 
+                fullWidth 
+                type="submit"
+                disabled={isLoading}
+              >
+                {isLoading ? 'Loading...' : (isLogin ? 'Sign In' : 'Sign Up')}
               </Button>
-              <Button variant="outline" size="lg">
+              <Button variant="outline" size="lg" disabled={isLoading}>
                 Request Demo
               </Button>
             </div>
