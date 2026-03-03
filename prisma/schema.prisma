@@ -7,14 +7,17 @@ datasource db {
 }
 
 model User {
-  id           Int       @id @default(autoincrement())
-  username     String    @unique @db.VarChar(50)
-  email        String    @unique @db.VarChar(255)
-  passwordHash String    @map("password_hash") @db.VarChar(255)
-  createdAt    DateTime  @default(now()) @map("created_at")
-  updatedAt    DateTime  @updatedAt @map("updated_at")
-  sessions     Session[]
-  messages     Message[]
+  id               Int            @id @default(autoincrement())
+  username         String         @unique @db.VarChar(50)
+  email            String         @unique @db.VarChar(255)
+  passwordHash     String         @map("password_hash") @db.VarChar(255)
+  createdAt        DateTime       @default(now()) @map("created_at")
+  updatedAt        DateTime       @updatedAt @map("updated_at")
+  sessions         Session[]
+  sentMessages     Message[]      @relation("SentMessages")
+  receivedMessages Message[]      @relation("ReceivedMessages")
+  conversations1   Conversation[] @relation("User1Conversations")
+  conversations2   Conversation[] @relation("User2Conversations")
 
   @@map("users")
 }
@@ -32,13 +35,44 @@ model Session {
   @@map("sessions")
 }
 
+model Conversation {
+  id            Int       @id @default(autoincrement())
+  user1Id       Int       @map("user1_id")
+  user2Id       Int       @map("user2_id")
+  lastMessageAt DateTime? @map("last_message_at")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+  
+  user1         User      @relation("User1Conversations", fields: [user1Id], references: [id], onDelete: Cascade)
+  user2         User      @relation("User2Conversations", fields: [user2Id], references: [id], onDelete: Cascade)
+  messages      Message[]
+  
+  @@unique([user1Id, user2Id])
+  @@index([user1Id])
+  @@index([user2Id])
+  @@map("conversations")
+}
+
 model Message {
-  id        Int      @id @default(autoincrement())
-  userId    Int      @map("user_id")
-  content   String   @db.Text
-  createdAt DateTime @default(now()) @map("created_at")
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id             Int           @id @default(autoincrement())
+  userId         Int           @map("user_id")
+  recipientId    Int           @map("recipient_id")
+  conversationId Int?          @map("conversation_id")
+  content        String        @db.Text
+  messageType    String        @default("text") @map("message_type") @db.VarChar(50)
+  isRead         Boolean       @default(false) @map("is_read")
+  readAt         DateTime?     @map("read_at")
+  metadata       Json?
+  createdAt      DateTime      @default(now()) @map("created_at")
+  updatedAt      DateTime      @updatedAt @map("updated_at")
+  
+  sender         User          @relation("SentMessages", fields: [userId], references: [id], onDelete: Cascade)
+  recipient      User          @relation("ReceivedMessages", fields: [recipientId], references: [id], onDelete: Cascade)
+  conversation   Conversation? @relation(fields: [conversationId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+  @@index([recipientId])
+  @@index([conversationId])
+  @@index([createdAt])
   @@map("messages")
 }
