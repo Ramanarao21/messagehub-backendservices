@@ -1,10 +1,3 @@
-<<<<<<< HEAD
-node_modules
-# Keep environment variables out of version control
-.env
-
-/src/generated/prisma
-=======
 # Logs
 logs
 *.log
@@ -24,6 +17,9 @@ dist-ssr
 .env.local
 .env.production
 
+# Prisma
+/src/generated/prisma
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -34,4 +30,3 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
->>>>>>> cd6c69922e5fd51c5e511e99830835b8f7f5b08d

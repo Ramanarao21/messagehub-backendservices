@@ -1,5 +1,5 @@
 import prisma from '../config/prisma.js';
-import { getIO } from '../config/socket.js';
+import { getIO } from '../socket/index.js';
 
 export const messageService = {
     // Save message to database

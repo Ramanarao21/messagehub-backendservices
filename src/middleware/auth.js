@@ -20,3 +20,27 @@ export const authenticate = async (req, res, next) => {
         res.status(401).json({ error: 'Authentication failed' });
     }
 };
+
+
+export const socketAuthMiddleware = async (socket, next) => {
+    try {
+        const token = socket.handshake.auth.token;
+        
+        if (!token) {
+            return next(new Error('Authentication error: No token provided'));
+        }
+
+        const user = await authService.verifyToken(token);
+        
+        if (!user) {
+            return next(new Error('Authentication error: Invalid token'));
+        }
+
+        socket.userId = user.userId;
+        socket.username = user.username;
+        next();
+    } catch (error) {
+        next(new Error('Authentication error'));
+    }
+};
+
