@@ -3,12 +3,15 @@ import { createServer } from "http";
 import cors from "cors";
 import dotenv from "dotenv";
 import authRoutes from "./routes/authRoutes.js";
+import dmRoutes from "./routes/dmRoutes.js";
+import groupRoutes from "./routes/groupRoutes.js";
+import messageRoutes from "./routes/messageRoutes.js";
 import { initializeSocket } from "./socket/index.js";
 
 dotenv.config();
 const app = express();
 const server = createServer(app);
-const PORT = process.env.PORT || 5002;
+const PORT = process.env.PORT || 4000;
 
 app.use(cors());
 app.use(express.json());
@@ -19,6 +22,14 @@ app.get("/", (req, res) => {
 
 // Auth routes
 app.use("/api/auth", authRoutes);
+// DM routes
+app.use("/api/dm", dmRoutes);
+// Group routes
+app.use("/api/groups", groupRoutes);
+// Message routes (DMs)
+app.use("/api/messages", messageRoutes);
+// Group routes
+app.use("/api", groupRoutes);
 
 // Initialize Socket.IO with Redis adapter
 initializeSocket(server);
