@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import authRoutes from "./routes/authRoutes.js";
 import dmRoutes from "./routes/dmRoutes.js";
 import groupRoutes from "./routes/groupRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 import messageRoutes from "./routes/messageRoutes.js";
 import { initializeSocket } from "./socket/index.js";
 
@@ -22,14 +23,14 @@ app.get("/", (req, res) => {
 
 // Auth routes
 app.use("/api/auth", authRoutes);
+// User routes
+app.use("/api/users", userRoutes);
 // DM routes
 app.use("/api/dm", dmRoutes);
 // Group routes
 app.use("/api/groups", groupRoutes);
 // Message routes (DMs)
 app.use("/api/messages", messageRoutes);
-// Group routes
-app.use("/api", groupRoutes);
 
 // Initialize Socket.IO with Redis adapter
 initializeSocket(server);
